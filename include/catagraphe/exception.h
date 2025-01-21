@@ -15,6 +15,13 @@ namespace ctgrph {
 			Exception("Failed to display date with fmt: `" + fmt +
 				  "'. (" + msg + ")") { }
 	};
+
+	class Serde_Exception: public Exception {
+	public:
+		Serde_Exception(std::string type, std::string what):
+			Exception("Serde error. Type: `" + type + "'. " + what) 
+			{}
+	};
 }
 
 #endif

@@ -5,6 +5,7 @@ namespace ctgrph {
 
 	Core::Core(const std::string &db_path, Record_Level default_lvl)
 	{
+		
 	}
 
 	void
