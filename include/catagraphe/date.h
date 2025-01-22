@@ -5,13 +5,11 @@
 #include <time.h>
 
 #include <catagraphe/serde.h>
-
-
 namespace ctgrph {
 	/**
 	 *	
 	 */
-	class Date: public I_Serialize, public I_Deserialize {
+	class Date: public I_Serializible, public I_Deserializible {
 		time_t _m_unistd_time; 
 	public:
 		Date();
@@ -31,10 +29,14 @@ namespace ctgrph {
 		[[nodiscard]]
 		virtual bytes serialize(void) const noexcept(true) override;
 
-		virtual void deserialize(bytes) noexcept(false) override;
+		virtual void deserialize(const bytes&) noexcept(false) override;
+
+		time_t get_time(void) const noexcept(true) {
+			return _m_unistd_time;
+		}
 	private:
 		bool
-		_proc_fmt_seq(std::stirng_view, std::string&, std::string)
+		_proc_fmt_seq(std::string_view, std::string&, std::string)
 			noexcept(true);
 	};
 }

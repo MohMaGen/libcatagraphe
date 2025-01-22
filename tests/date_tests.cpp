@@ -1,0 +1,38 @@
+#include "./tests.h"
+#include <catagraphe/date.h>
+#include <catagraphe/exception.h>
+#include <iostream>
+
+
+namespace date_tests {
+	void serde_1(void) {
+		ctgrph::Date date1 { }, date2 { };
+		auto bytes = date1.serialize();
+		date2.deserialize(bytes);
+
+		tests::Assert_Eq::assert(date2.get_time(), date1.get_time());
+	}
+
+	void serde_2(void) [[maybe_unused]] {
+		ctgrph::Date date1 { }, date2 { };
+		auto bytes1 = date1.serialize();
+		date2.deserialize(bytes1);
+		auto bytes2 = date2.serialize();
+
+		tests::Assert_Eq::assert_range(bytes1, bytes2);
+	}	
+
+	void display_1(void) {
+		ctgrph::Date date1 { };
+		std::string str (200, 'a');
+		
+		assert_exception((void) date1.display(str);,
+				 ctgrph::Date_Display_Exception);
+	}
+}
+
+tests::Test_Group::pointer tests::date_tests(void) {
+	return Test_Group::mk_pointer( "date",
+		date_tests::serde_1, date_tests::serde_2,
+		date_tests::display_1);
+}

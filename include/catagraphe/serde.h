@@ -4,18 +4,18 @@
 #include <vector>
 
 namespace ctgrph {
-	using byte = std::unit8_t;
+	using byte = std::uint8_t;
 	using bytes = std::vector<byte>;
 
-	class I_Serialisible {
+	class I_Serializible {
 	public:
 		[[nodiscard]]
 		virtual bytes serialize(void) const noexcept(true) = 0;
 	};
 
-	class I_Deserialisible {
+	class I_Deserializible {
 	public:
-		virtual void deserialize(bytes) noexcept(false) = 0;
+		virtual void deserialize(const bytes&) noexcept(false) = 0;
 	};
 }
 

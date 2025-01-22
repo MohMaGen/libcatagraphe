@@ -1,9 +1,8 @@
 #include <catagraphe/date.h>
 #include <catagraphe/exception.h>
-
 #include <iterator>
 #include <utility>
-#include <cstirng>
+#include <cstring>
 #include <ctime>
 
 
@@ -16,12 +15,12 @@ namespace ctgrph {
 
 	std::string Date::display(const std::string &fmt) const noexcept(false)
 	{	
-		if (fmt.lenght() > 0x80) {
+		if (fmt.length() > 0x80) {
 			throw Date_Display_Exception(fmt, "Fortmat to long.");	
 		}
 
 		char buf[0x100];
-		auto local_time = std::localtime(_m_unistd_time);
+		auto local_time = std::localtime(&_m_unistd_time);
 		
 		if (strftime(buf, sizeof(buf), fmt.data(), local_time) == 0) {
 			throw Date_Display_Exception(fmt, "Invalid format");
@@ -32,23 +31,23 @@ namespace ctgrph {
 
 	bytes Date::serialize(void) const noexcept(true)
 	{
-		bytes out (sizeof(_m_unistd_time));	
+		bytes out (0);	
 
-		(byte*) time = (byte*)&_m_unistd_time;
+		byte* time = (byte*)&_m_unistd_time;
 		std::copy(time, time + sizeof(_m_unistd_time), 
 			  std::back_inserter(out));
 
-		return std::move(out);
+		return out;
 	}
 
-	void Date::deserialize(bytes in) noexcept(false)
+	void Date::deserialize(const bytes &in) noexcept(false)
 	{
 		if (in.size() < sizeof(_m_unistd_time)) {
 			throw Serde_Exception("Date",
 				"Bytes length to small for time");
 		}
 
-		time = *(time_t*)in.data();
+		_m_unistd_time = *(time_t*)in.data();
 	}
 
 }
