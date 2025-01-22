@@ -21,6 +21,10 @@ namespace ctgrph {
 		Date date; 
 		std::string text;
 
+		Record() { }
+		Record(Record_Level lvl, Date date, const std::string &text):
+			lvl(lvl), date(date), text(text) { }
+
 		virtual Bytes serialize(void) const noexcept(true) override;
 		virtual void
 		deserialize(Const_Bytes_View&) noexcept(false) override;
@@ -45,9 +49,9 @@ namespace ctgrph {
 
 		Core(const std::string &db_path, Record_Level default_lvl);
 
-		void set_default_lvl(Record_Level lvl) noexcept(false);
+		void set_default_lvl(Record_Level lvl) noexcept(true);
 
-		void create_record(Record_Level lvl, std::string text)
+		void create_record(Record_Level lvl, const std::string &text)
 			noexcept(false);
 		
 		[[nodiscard("View to the rectords must be used!")]]

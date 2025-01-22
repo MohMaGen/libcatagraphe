@@ -57,8 +57,6 @@ namespace tests {
 		int goups_count(void) const noexcept(true);
 	};
 
-	Test_Group::pointer date_tests(void);
-
 	class Assert_Eq: public std::runtime_error {
 	public:
 		static void assert(std::string val, std::string must_be) {
@@ -126,6 +124,8 @@ namespace tests {
 		} while(0)                                                    \
 
 
+	Test_Group::pointer date_tests(void);
+	Test_Group::pointer records_tests(void);
 }
 
 

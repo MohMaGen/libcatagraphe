@@ -10,6 +10,7 @@ namespace ctgrph {
 	class Const_Bytes_View { 
 		Bytes::const_iterator _m_begin, _m_end;
 	public:
+		Const_Bytes_View() {}
 		Const_Bytes_View(Bytes::const_iterator begin,
 				 Bytes::const_iterator end);
 
@@ -27,14 +28,13 @@ namespace ctgrph {
 	public:
 		[[nodiscard]]
 		virtual Bytes serialize(void) const noexcept(true) = 0;
+		virtual ~I_Serializible() {}
 	};
 
 	class I_Deserializible {
 	public:
-		virtual void
-		deserialize(Const_Bytes_View&) noexcept(false) = 0;
-
-		void deserialize(const Bytes &b) noexcept(false);
+		virtual void deserialize(Const_Bytes_View&) noexcept(false) = 0;
+		virtual ~I_Deserializible() {}
 	};
 }
 

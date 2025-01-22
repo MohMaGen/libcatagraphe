@@ -36,9 +36,4 @@ namespace ctgrph {
 	{
 		return _m_end - _m_begin;
 	}
-
-	void I_Deserializible::deserialize(const Bytes &b) noexcept(false) {
-		Const_Bytes_View view { b };
-		deserialize(view);
-	}
 }

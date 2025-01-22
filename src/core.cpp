@@ -1,3 +1,4 @@
+#include <catagraphe/exception.h>
 #include <catagraphe/core.h>
 #include <algorithm>
 #include <cstring>
@@ -25,6 +26,16 @@ namespace ctgrph {
 
 	void Record::deserialize(Const_Bytes_View &in) noexcept(false)
 	{
+		auto lvl_b = in.shift(sizeof(lvl));
+		lvl = *(Record_Level*)lvl_b.begin().base();
+
+		date.deserialize(in);
+
+		text = std::string { };
+		Const_Bytes_View text_b { };
+		while (*(text_b = in.shift(sizeof(char))).begin() != 0) {
+			text.push_back(*text_b.begin());
+		}
 	}
 
 
@@ -34,20 +45,23 @@ namespace ctgrph {
 		
 	}
 
-	void
-	Core::set_default_lvl(Record_Level lvl) noexcept(false)
-	{
+	void Core::set_default_lvl(Record_Level lvl) noexcept(true) {
 		_m_default_lvl = lvl;
 	}
 
-	void
-	Core::create_record(Record_Level lvl, std::string text) noexcept(false)
+	void Core::create_record(Record_Level lvl, const std::string &text)
+		noexcept(false)
 	{
-		
+		if ((size_t)lvl < (size_t)_m_default_lvl) return;
+
+		if (text.length() == 0)
+			throw Exception("Can't create empty record!");
+
+		_m_records.push_back(Record(lvl, Date {}, text));
+
 	}
 		
-	Core::Const_View
-	Core::get_last_records(void) const noexcept(false) {
+	Core::Const_View Core::get_last_records(void) const noexcept(false) {
 		return Const_View { _m_records.cbegin(), _m_records.cend() };
 	}
 	

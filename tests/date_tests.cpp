@@ -1,6 +1,8 @@
 #include "./tests.h"
-#include <catagraphe/date.h>
 #include <catagraphe/exception.h>
+#include <catagraphe/serde.h>
+#include <catagraphe/date.h>
+
 #include <iostream>
 
 
@@ -8,18 +10,24 @@ namespace date_tests {
 	void serde_1(void) {
 		ctgrph::Date date1 { }, date2 { };
 		auto bytes = date1.serialize();
-		date2.deserialize(bytes);
+		ctgrph::Const_Bytes_View view { bytes };
+		date2.deserialize(view);
 
 		tests::Assert_Eq::assert(date2.get_time(), date1.get_time());
 	}
 
 	void serde_2(void) [[maybe_unused]] {
 		ctgrph::Date date1 { }, date2 { };
+
 		auto bytes1 = date1.serialize();
-		date2.deserialize(bytes1);
+		ctgrph::Const_Bytes_View view1 { bytes1 };
+
+		date2.deserialize(view1);
 		auto bytes2 = date2.serialize();
+		ctgrph::Const_Bytes_View view2 { bytes2 };
 
 		tests::Assert_Eq::assert_range(bytes1, bytes2);
+		tests::Assert_Eq::assert_range(view1, view2);
 	}	
 
 	void display_1(void) {
@@ -28,6 +36,8 @@ namespace date_tests {
 		
 		assert_exception((void) date1.display(str);,
 				 ctgrph::Date_Display_Exception);
+
+		(void) date1.display("%H:%M:%s");
 	}
 }
 
