@@ -4,18 +4,37 @@
 #include <vector>
 
 namespace ctgrph {
-	using byte = std::uint8_t;
-	using bytes = std::vector<byte>;
+	using Byte = std::uint8_t;
+	using Bytes = std::vector<Byte>;
+
+	class Const_Bytes_View { 
+		Bytes::const_iterator _m_begin, _m_end;
+	public:
+		Const_Bytes_View(Bytes::const_iterator begin,
+				 Bytes::const_iterator end);
+
+		Const_Bytes_View(const Bytes &b);
+
+		Bytes::const_iterator begin(void) const noexcept(true);
+		Bytes::const_iterator end(void) const noexcept(true);
+
+		Const_Bytes_View shift(size_t n) noexcept(false);
+
+		size_t len(void) const noexcept(true);
+	};
 
 	class I_Serializible {
 	public:
 		[[nodiscard]]
-		virtual bytes serialize(void) const noexcept(true) = 0;
+		virtual Bytes serialize(void) const noexcept(true) = 0;
 	};
 
 	class I_Deserializible {
 	public:
-		virtual void deserialize(const bytes&) noexcept(false) = 0;
+		virtual void
+		deserialize(Const_Bytes_View&) noexcept(false) = 0;
+
+		void deserialize(const Bytes &b) noexcept(false);
 	};
 }
 

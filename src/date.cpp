@@ -29,25 +29,22 @@ namespace ctgrph {
 		return { buf };
 	}
 
-	bytes Date::serialize(void) const noexcept(true)
+	Bytes Date::serialize(void) const noexcept(true)
 	{
-		bytes out (0);	
+		Bytes out (0);	
 
-		byte* time = (byte*)&_m_unistd_time;
+		Byte* time = (Byte*)&_m_unistd_time;
 		std::copy(time, time + sizeof(_m_unistd_time), 
 			  std::back_inserter(out));
 
 		return out;
 	}
 
-	void Date::deserialize(const bytes &in) noexcept(false)
+	void Date::deserialize(Const_Bytes_View &in) noexcept(false)
 	{
-		if (in.size() < sizeof(_m_unistd_time)) {
-			throw Serde_Exception("Date",
-				"Bytes length to small for time");
-		}
+		auto view = in.shift(sizeof(_m_unistd_time));
 
-		_m_unistd_time = *(time_t*)in.data();
+		_m_unistd_time = *(time_t*)view.begin().base();
 	}
 
 }

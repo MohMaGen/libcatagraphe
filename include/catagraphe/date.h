@@ -27,9 +27,10 @@ namespace ctgrph {
 		display(const std::string &fmt) const noexcept(false);
 
 		[[nodiscard]]
-		virtual bytes serialize(void) const noexcept(true) override;
+		virtual Bytes serialize(void) const noexcept(true) override;
 
-		virtual void deserialize(const bytes&) noexcept(false) override;
+		virtual void
+		deserialize(Const_Bytes_View&) noexcept(false) override;
 
 		time_t get_time(void) const noexcept(true) {
 			return _m_unistd_time;
