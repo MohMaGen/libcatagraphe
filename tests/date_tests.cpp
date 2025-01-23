@@ -13,7 +13,7 @@ namespace date_tests {
 		ctgrph::Const_Bytes_View view { bytes };
 		date2.deserialize(view);
 
-		tests::Assert_Eq::assert(date2.get_time(), date1.get_time());
+		assert_eq(date2.get_time(), date1.get_time());
 	}
 
 	void serde_2(void) [[maybe_unused]] {
@@ -26,8 +26,8 @@ namespace date_tests {
 		auto bytes2 = date2.serialize();
 		ctgrph::Const_Bytes_View view2 { bytes2 };
 
-		tests::Assert_Eq::assert_range(bytes1, bytes2);
-		tests::Assert_Eq::assert_range(view1, view2);
+		assert_eq_range(bytes1, bytes2);
+		assert_eq_range(view1, view2);
 	}	
 
 	void display_1(void) {

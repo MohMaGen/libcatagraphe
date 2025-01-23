@@ -9,6 +9,7 @@ int main(void)
 
 	tests.push_group(tests::date_tests());
 	tests.push_group(tests::records_tests());
+	tests.push_group(tests::core_tests());
 
 	std::cout << "Start tests" << std::endl;
 	tests.run_groups();
@@ -65,13 +66,13 @@ namespace tests {
 		const auto log_succed = [log_group](auto val) { 
 			std::lock_guard guar { stdout_mutex };
 			log_group();
-			std::cout << " \x1b[32m[" << val << "]\x1b[0m"
+			std::cout << " \x1b[32m" << val << "\x1b[0m"
 				  << std::endl;
 		};
 		const auto log_failed = [log_group](auto val) { 
 			std::lock_guard guar { stdout_mutex };
 			log_group();
-			std::cout << " \x1b[31m[" << val << "]\x1b[0m"
+			std::cout << " \x1b[31m" << val << "\x1b[0m"
 				  << std::endl;
 		};
 
