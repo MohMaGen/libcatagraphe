@@ -15,17 +15,17 @@ namespace records_tests {
 		auto bytes1 = record1.serialize();
 		ctgrph::Const_Bytes_View view1 { bytes1 };
 
-		tests::Assert_Eq::assert(*bytes1.rbegin(), (ctgrph::Byte)0);
+		assert_eq(*bytes1.rbegin(), (ctgrph::Byte)0);
 
 		record2.deserialize(view1);
 		auto bytes2 = record2.serialize();
 		ctgrph::Const_Bytes_View view2 { bytes2 };
 
-		tests::Assert_Eq::assert_range(bytes1, bytes2);
-		tests::Assert_Eq::assert_range(view1, view2);
-		tests::Assert_Eq::assert((int)record1.lvl, (int)record1.lvl);
-		tests::Assert_Eq::assert(record1.text, record1.text);
-		tests::Assert_Eq::assert(record1.date.get_time(),
+		assert_eq_range(bytes1, bytes2);
+		assert_eq_range(view1, view2);
+		assert_eq((int)record1.lvl, (int)record1.lvl);
+		assert_eq(record1.text, record1.text);
+		assert_eq(record1.date.get_time(),
 					 record1.date.get_time());
 	}
 
@@ -40,17 +40,17 @@ namespace records_tests {
 		auto bytes1 = record1.serialize();
 		ctgrph::Const_Bytes_View view1 { bytes1 };
 
-		tests::Assert_Eq::assert(*bytes1.rbegin(), (ctgrph::Byte)0);
+		assert_eq(*bytes1.rbegin(), (ctgrph::Byte)0);
 
 		record2.deserialize(view1);
 		auto bytes2 = record2.serialize();
 		ctgrph::Const_Bytes_View view2 { bytes2 };
 
-		tests::Assert_Eq::assert_range(bytes1, bytes2);
-		tests::Assert_Eq::assert_range(view1, view2);
-		tests::Assert_Eq::assert((int)record1.lvl, (int)record1.lvl);
-		tests::Assert_Eq::assert(record1.text, record1.text);
-		tests::Assert_Eq::assert(record1.date.get_time(),
+		assert_eq_range(bytes1, bytes2);
+		assert_eq_range(view1, view2);
+		assert_eq((int)record1.lvl, (int)record1.lvl);
+		assert_eq(record1.text, record1.text);
+		assert_eq(record1.date.get_time(),
 					 record1.date.get_time());
 	}
 }

@@ -57,15 +57,25 @@ namespace tests {
 		int goups_count(void) const noexcept(true);
 	};
 
-	class Assert_Eq: public std::runtime_error {
+	class Assert_Exception: public std::runtime_error {
 	public:
-		static void assert(std::string val, std::string must_be) {
+		Assert_Exception(std::string what, int line, std::string file):
+			std::runtime_error(
+				"(" + file +":" + std::to_string(line) + ") "
+				+ what) {}
+	};
+
+	class Assert_Eq: public Assert_Exception {
+	public:
+		static void assert(std::string val, std::string must_be,
+				   int line, std::string file) {
 			if (val == must_be) return;
-			throw Assert_Eq(val, must_be);
+			throw Assert_Eq(val, must_be, line, file);
 		}
 
 		template<typename __Range>
-		static void assert_range(__Range val, __Range  must_be) {
+		static void assert_range(__Range val, __Range  must_be,
+					 int line, std::string file) {
 			if (std::equal(val.begin(), val.end(),
 				       must_be.begin())) return;
 			
@@ -88,23 +98,34 @@ namespace tests {
 
 			must_be_s += "}";
 
-			throw Assert_Eq(val_s, must_be_s);
+			throw Assert_Eq(val_s, must_be_s, line, file);
 
 		}
 
 		template<typename T>
-		static void assert(T val, T must_be) {
+		static void
+		assert(T val, T must_be, int line, std::string file) {
 			if (val == must_be) return;
 
 			throw Assert_Eq(std::to_string(val),
-					std::to_string(must_be));
+					std::to_string(must_be),
+					line, file);
 		}
 
-		Assert_Eq(std::string val, std::string must_be):
-			std::runtime_error(
+		Assert_Eq(std::string val, std::string must_be,
+			  int line, std::string file):
+			Assert_Exception(
 				"[Assert Eq failed]: expect to be "
 				"equal to `" + must_be + "', "
-				"but actually is `" + val +"'") { }
+				"but actually is `" + val +"'",
+				line, file) { }
+
+#define assert_eq(val, must_be) tests::Assert_Eq::assert(val, must_be,        \
+							 __LINE__, __FILE__)
+
+#define assert_eq_range(val, must_be) tests::Assert_Eq::assert_range(         \
+					val, must_be, __LINE__, __FILE__)
+
 	};
 
 	class Assert_Expect_Exception: public std::runtime_error {

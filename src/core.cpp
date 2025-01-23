@@ -64,6 +64,15 @@ namespace ctgrph {
 			}	
 
 			_m_records.push_back(record);
+
+			try {
+				Byte b = view.shift(1).begin()[0];
+				if (b != (Byte)0xA)
+				throw Serde_Exception("Core",
+					"expect new line after record, but get"
+					+ std::to_string((char)b));
+
+			} catch (std::exception &e) { }
 		}	
 	}
 
