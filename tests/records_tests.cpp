@@ -15,6 +15,33 @@ namespace records_tests {
 		auto bytes1 = record1.serialize();
 		ctgrph::Const_Bytes_View view1 { bytes1 };
 
+		tests::Assert_Eq::assert(*bytes1.rbegin(), (ctgrph::Byte)0);
+
+		record2.deserialize(view1);
+		auto bytes2 = record2.serialize();
+		ctgrph::Const_Bytes_View view2 { bytes2 };
+
+		tests::Assert_Eq::assert_range(bytes1, bytes2);
+		tests::Assert_Eq::assert_range(view1, view2);
+		tests::Assert_Eq::assert((int)record1.lvl, (int)record1.lvl);
+		tests::Assert_Eq::assert(record1.text, record1.text);
+		tests::Assert_Eq::assert(record1.date.get_time(),
+					 record1.date.get_time());
+	}
+
+	void serde_2(void)
+	{
+		using Level = ctgrph::Record_Level;
+		const std::string msg (400, 'a');
+
+		ctgrph::Record record1 (Level::Info, {}, msg);
+		ctgrph::Record record2 {};
+
+		auto bytes1 = record1.serialize();
+		ctgrph::Const_Bytes_View view1 { bytes1 };
+
+		tests::Assert_Eq::assert(*bytes1.rbegin(), (ctgrph::Byte)0);
+
 		record2.deserialize(view1);
 		auto bytes2 = record2.serialize();
 		ctgrph::Const_Bytes_View view2 { bytes2 };
@@ -32,6 +59,6 @@ namespace records_tests {
 tests::Test_Group::pointer tests::records_tests(void)
 {
 	return Test_Group::mk_pointer("records", 
-			records_tests::serde_1);
+			records_tests::serde_1, records_tests::serde_2);
 }
 

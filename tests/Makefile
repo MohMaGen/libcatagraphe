@@ -13,14 +13,17 @@ incs := $(wildcard $(src-dir)/*.h)
 
 
 build: $(objs)
-	g++ -o $(build-dir)/run-tests $(objs) $(debug) $(warnings) \
+	@bash -c "echo -e \"\\t• \\x1b[33mbuild tests executable:\\x1b[0m\""
+	@g++ -o $(build-dir)/run-tests $(objs) $(debug) $(warnings) \
 		-L $(lib-dir) -l$(libcatagraphe)
 
 $(objs): $(build-dir)/test_%.o: $(src-dir)/%.cpp $(incs)
-	g++ -o $@ -c $< -ggdb $(warnings) -I $(inc-dir)
+	@bash -c "echo -e \"\\t• \\x1b[33mbuild object $@ from $<:\\x1b[0m\""
+	@g++ -o $@ -c $< -ggdb $(warnings) -I $(inc-dir)
 
 run: build
-	LD_LIBRARY_PATH=$(LD_PATH):$(lib-dir) $(build-dir)/run-tests
+	@bash -c "echo -e \"\\t• \\x1b[33mrun tests\\x1b[0m\""
+	@LD_LIBRARY_PATH=$(LD_PATH):$(lib-dir) $(build-dir)/run-tests
 
 
 	
