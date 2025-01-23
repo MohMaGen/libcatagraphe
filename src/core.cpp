@@ -1,6 +1,7 @@
 #include <catagraphe/exception.h>
 #include <catagraphe/core.h>
 #include <algorithm>
+#include <fstream>
 #include <cstring>
 
 namespace ctgrph {
@@ -74,6 +75,30 @@ namespace ctgrph {
 
 			} catch (std::exception &e) { }
 		}	
+	}
+
+	void Core::save(const std::string &db_path) const noexcept(false)
+	{
+		Bytes res = save();
+
+		std::ofstream file (db_path, std::ios::binary);
+		file.write((const char*)res.begin().base(), res.len());
+	}
+
+	Bytes Core::save(void) const noexcept(true)
+	{
+		Bytes out { };
+
+		for (auto record: _m_records) {
+			auto bytes = record.serialize();
+
+			std::copy(bytes.begin(), bytes.end(),
+				  back_inserter(out));
+
+			out.push_back((Byte)0x0A); // new line
+		}
+
+		return out;
 	}
 
 	void Core::set_default_lvl(Record_Level lvl) noexcept(true) {

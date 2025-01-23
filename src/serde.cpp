@@ -74,6 +74,11 @@ namespace ctgrph {
 		_m_data.push_back(byte);
 	}
 
+	size_t Bytes::len(void) const noexcept(true)
+	{
+		return _m_data.size();
+	}
+
 	std::back_insert_iterator<Bytes_Vec> back_inserter(Bytes& bytes)
 	{
 		return std::back_inserter(bytes._m_data); 

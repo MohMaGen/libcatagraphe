@@ -48,8 +48,12 @@ namespace ctgrph {
 		};
 
 		Core(Record_Level default_lvl);
+
 		void init(const std::string &db_path) noexcept(false);
 		void init(const Bytes&) noexcept(false);
+
+		void save(const std::string &db_path) const noexcept(false);
+		Bytes save(void) const noexcept(true);
 
 		void set_default_lvl(Record_Level lvl) noexcept(true);
 
