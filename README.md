@@ -13,4 +13,3 @@ make
 ```console
 make run-tests
 ```
-
