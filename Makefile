@@ -12,17 +12,20 @@ incs := $(wildcard $(src-dir)/*.h)
 objs := $(patsubst $(src-dir)/%.cpp, $(build-dir)/%.o, $(srcs))
 
 lib: mkdir $(objs)
-	g++ -o $(build-dir)/libcatagraphe.so --shared -rdynamic -fPIC \
+	@bash -c "echo -e \"\\t• \\x1b[34mlink shared library:\\x1b[0m\""
+	@g++ -o $(build-dir)/libcatagraphe.so --shared -rdynamic -fPIC \
 		$(objs)	$(libs) $(warnings) $(debug) $(std)
 
 $(objs): $(build-dir)/%.o: $(src-dir)/%.cpp $(incs)
-	g++ -o $@ -c $< $(warnings) $(debug) -I $(inc-dir) $(std) -fPIC
+	@bash -c "echo -e \"\\t• \\x1b[34mcompile object $@ from $<:\\x1b[0m\""
+	@g++ -o $@ -c $< $(warnings) $(debug) -I $(inc-dir) $(std) -fPIC
 
 mkdir:
-	bash -c "[[ -d $(build-dir) ]] && mkdir -p $(build-dir) || true"
+	@bash -c "[[ -d $(build-dir) ]] && mkdir -p $(build-dir) || true"
 
 run-tests: lib
-	make -C tests run
+	@bash -c "echo -e \"\\t• \\x1b[34mrun tests:\\x1b[0m\""
+	@make -C tests run -s
 
 example-app:
 	#TODO

@@ -41,8 +41,7 @@ namespace ctgrph {
 
 	Core::Core(const std::string &db_path, Record_Level default_lvl):
 		_m_records(0), _m_default_lvl{ default_lvl }
-	{
-		
+	{			
 	}
 
 	void Core::set_default_lvl(Record_Level lvl) noexcept(true) {
