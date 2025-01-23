@@ -32,6 +32,8 @@ namespace ctgrph {
 		const_reverse_iterator rbegin(void) const noexcept(true);
 		const_reverse_iterator rend(void) const noexcept(true);
 
+		size_t len(void) const noexcept(true);
+
 		void push_back(Byte) noexcept(true);
 
 		friend std::back_insert_iterator<Bytes_Vec>
