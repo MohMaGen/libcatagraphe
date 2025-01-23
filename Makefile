@@ -29,5 +29,6 @@ run-tests: lib
 	@make -C tests run -s
 
 example-app:
-	#TODO
+	@bash -c "echo -e \"\\t• \\x1b[34mrun example-app:\\x1b[0m\""
+	@make -C example-app run -s
 
