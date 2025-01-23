@@ -126,6 +126,7 @@ namespace tests {
 
 	Test_Group::pointer date_tests(void);
 	Test_Group::pointer records_tests(void);
+	Test_Group::pointer core_tests(void);
 }
 
 

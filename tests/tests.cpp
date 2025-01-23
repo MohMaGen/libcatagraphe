@@ -9,6 +9,7 @@ int main(void)
 
 	tests.push_group(tests::date_tests());
 	tests.push_group(tests::records_tests());
+	tests.push_group(tests::core_tests());
 
 	std::cout << "Start tests" << std::endl;
 	tests.run_groups();

@@ -10,7 +10,7 @@
 
 namespace ctgrph {
 
-	enum class Record_Level: size_t {
+	enum class Record_Level: Byte {
 		Text = 0, Debug, Info, Warning, Error
 	};
 
@@ -47,7 +47,9 @@ namespace ctgrph {
 			}
 		};
 
-		Core(const std::string &db_path, Record_Level default_lvl);
+		Core(Record_Level default_lvl);
+		void init(const std::string &db_path) noexcept(false);
+		void init(const Bytes&) noexcept(false);
 
 		void set_default_lvl(Record_Level lvl) noexcept(true);
 
@@ -55,7 +57,7 @@ namespace ctgrph {
 			noexcept(false);
 		
 		[[nodiscard("View to the rectords must be used!")]]
-		Const_View get_last_records(void) const noexcept(false);
+		Const_View get_records(void) const noexcept(false);
 		
 	private:
 		Storage _m_records;

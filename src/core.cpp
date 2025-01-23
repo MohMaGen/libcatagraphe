@@ -39,11 +39,32 @@ namespace ctgrph {
 	}
 
 
-	Core::Core(const std::string &db_path, Record_Level default_lvl):
-		_m_records(0), _m_default_lvl{ default_lvl }
-	{			
+	Core::Core(Record_Level default_lvl):
+		_m_records(0), _m_default_lvl{ default_lvl } { }
+
+	void Core::init(const std::string &db_path) noexcept(false)
+	{
 		Bytes bytes { };	
 		bytes.read_file(db_path);
+
+		init(bytes);
+	}
+
+	void Core::init(const Bytes &bytes) noexcept(false)
+	{
+		Const_Bytes_View view { bytes };
+
+		while (view.len() > 0) {
+			Record record { };
+
+			try { 
+				record.deserialize(view);
+			} catch (std::exception &e) {
+				throw Core_Init_Exception(e.what());
+			}	
+
+			_m_records.push_back(record);
+		}	
 	}
 
 	void Core::set_default_lvl(Record_Level lvl) noexcept(true) {
@@ -62,7 +83,7 @@ namespace ctgrph {
 
 	}
 		
-	Core::Const_View Core::get_last_records(void) const noexcept(false) {
+	Core::Const_View Core::get_records(void) const noexcept(false) {
 		return Const_View { _m_records.cbegin(), _m_records.cend() };
 	}
 	

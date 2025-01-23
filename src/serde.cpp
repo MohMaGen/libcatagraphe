@@ -78,6 +78,4 @@ namespace ctgrph {
 	{
 		return std::back_inserter(bytes._m_data); 
 	}
-
-
 }

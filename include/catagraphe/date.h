@@ -6,9 +6,6 @@
 
 #include <catagraphe/serde.h>
 namespace ctgrph {
-	/**
-	 *	
-	 */
 	class Date: public I_Serializible, public I_Deserializible {
 		time_t _m_unistd_time; 
 	public:

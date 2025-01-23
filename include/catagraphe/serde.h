@@ -1,5 +1,6 @@
 #ifndef __CATAGRAPHE_SERDE__
 #define __CATAGRAPHE_SERDE__
+#include <initializer_list>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -17,6 +18,8 @@ namespace ctgrph {
 		using const_iterator = Bytes_Vec::const_iterator;
 		using const_reverse_iterator = Bytes_Vec::const_reverse_iterator;
 		using value_type     = Byte;
+
+		Bytes(std::initializer_list<Byte> values): _m_data(values) { }
 
 		template<typename ...__Types>
 		Bytes(__Types... types): _m_data(types...) { }

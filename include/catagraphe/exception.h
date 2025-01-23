@@ -22,6 +22,12 @@ namespace ctgrph {
 			Exception("Serde error. Type: `" + type + "'. " + what) 
 			{}
 	};
+
+	class Core_Init_Exception: public Exception {
+	public:
+		Core_Init_Exception(std::string what):
+			Exception("[Failed to init core]: " + what) { }
+	};
 }
 
 #endif
