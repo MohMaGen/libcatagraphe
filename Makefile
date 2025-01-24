@@ -28,7 +28,7 @@ run-tests: lib
 	@bash -c "echo -e \"\\t• \\x1b[34mrun tests:\\x1b[0m\""
 	@make -C tests run -s
 
-example-app:
+example-app: lib
 	@bash -c "echo -e \"\\t• \\x1b[34mrun example-app:\\x1b[0m\""
-	@make -C example-app run -s
+	@make -C example-app -s
 

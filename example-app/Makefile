@@ -17,7 +17,7 @@ build: $(objs)
 	@g++ -o $(build-dir)/example-app $(objs) $(debug) $(warnings) \
 		-L $(lib-dir) -l$(libcatagraphe) $(clrs)
 
-$(objs): $(build-dir)/test_%.o: $(src-dir)/%.cpp $(incs)
+$(objs): $(build-dir)/example_app_%.o: $(src-dir)/%.cpp $(incs)
 	@bash -c "echo -e \"\\t• \\x1b[32mbuild object $@ from $<:\\x1b[0m\""
 	@g++ -o $@ -c $< -ggdb $(warnings) -I $(inc-dir) $(clrs)
 
