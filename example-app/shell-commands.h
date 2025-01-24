@@ -134,7 +134,8 @@ namespace shell {
 				"\x1b[4;1mLEVEL\x1b[0m "
 				"\x1b[4;1mTEXT\x1b[0m\n"
 				"ARGUMENTS:\n"
-				"\t\x1b[1mLEVEL\x1b[0m\tlevel of the record.\n"
+				"\t\x1b[1mLEVEL\x1b[0m\tlevel of the record. Level must be\n"
+				"\t\tbe one of: `Text', `Info', `Debug', `Warning', `Error'\n"
 				"\t\x1b[1mTEXT\x1b[0m\ttext of the record.\n";
 
 			return { msg };
