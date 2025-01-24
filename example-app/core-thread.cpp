@@ -4,15 +4,15 @@
 
 namespace core {	
 	Core_Thread::Core_Thread(ctgrph::Record_Level default_lvl):
-		_m_core(default_lvl) { }
+		_m_thrd{}, _m_mutex{}, _m_core(default_lvl),
+		_m_commands{}, _m_is_running{false} { }
 	
 	static void log_err(const std::string &what) {
 		std::cerr << "[ERR] " + what << std::endl;
 	}
 
-	void Core_Thread::init(const std::string &db_path) noexcept(false)
-	{
-		const auto event_loop = [this](void) {
+	void Core_Thread::_m_loop(void) noexcept(true) {
+		do {
 			std::lock_guard guard { _m_mutex };
 			for (auto &cmd : _m_commands) {
 				try {
@@ -21,12 +21,13 @@ namespace core {
 					log_err(e.what());
 				};
 			}
-		};
+		} while(_m_is_running);
+	}
 
+	void Core_Thread::init(const std::string &db_path) noexcept(false)
+	{
 		_m_core.init(db_path);	
-		_m_thrd = std::thread([this, &event_loop](void) {
-			do event_loop(); while(_m_is_running);
-		});
+		_m_thrd = std::thread(&Core_Thread::_m_loop, this);
 
 		_m_is_running = true;
 	}
@@ -44,14 +45,6 @@ namespace core {
 		_m_thrd.join();	
 	}
 
-
-	template<typename __Command, typename... __Args>
-	void Core_Thread::Core_Interface::send_command(__Args... args)
-	{
-		auto cmd = std::unique_ptr<I_Core_Command>(
-					new __Command(args...));
-		_m_commands.push_back(std::move(cmd));
-	}
 
 	void Core_Thread::Core_Interface::close(void) noexcept(true)
 	{

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include "./shell-commands.h"
 #include "./core-thread.h"
 #include "./commands.h"
 #include "./shell.h"
@@ -46,11 +47,17 @@ int main(int argc, char **argv)
 			default_lvl = ctgrph::Record_Level::Error;
 	}
 
-	core::Core_Thread thrd { default_lvl };
-	thrd.init(db_path);
-
+	std::shared_ptr<core::Core_Thread> thrd (
+		new core::Core_Thread(default_lvl));
+	
+	thrd->init(db_path);
 	
 	shell::Shell shell { "[" + db_path + " catagraphe]$" };
+
+	shell.add_command<shell::Close_Command>(thrd);
+	shell.add_command<shell::Clear_Command>();
+
+	shell.add_command<shell::Create_Record_Command>(thrd);
 
 	shell.run();	
 

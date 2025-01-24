@@ -3,73 +3,77 @@
 
 
 namespace shell {
-	class Close_Command: public I_Command {
-		bool &_m_should_close;
-	public:
-		Close_Command(bool &should_close):
-			_m_should_close(should_close) {}
-
-		virtual void
-		execute(std::vector<std::string> args) noexcept(false) override
-		{
-			if (args.size() != 0)
-				throw Wrong_Arguments_Exception(help_msg());
-
-			_m_should_close = true;
-		}
-
-		virtual bool
-		match_name(const std::string &name) const noexcept(true)
-						    override
-		{
-			return name == "close";
-		}
-
-		virtual std::string
-		help_msg(void) const noexcept(true) override
-		{
-			return
-				"USAGE:\n"
-				"\t\x1b[1mclose\x1b[0\n"
-				"ARGUMENTS:\n"
-				"\thas not.\n";
-		}
-
-	};
-
 
 	Shell::Shell(const std::string &prompt):
-		_m_commands{ }, _m_prompt(prompt), _m_should_close{ false }
+		_m_commands{ }, _m_prompt(prompt)
 	{
-		add_command<Close_Command>(_m_should_close);
+		_m_env = std::make_shared<Env>();
+		_m_env->should_close = false;
 	}
 
-	template<typename __Command, typename... __Args>
-	void Shell::add_command(__Args... args) noexcept(false)
+
+	static std::vector<std::string> parse_args(std::string_view view)
 	{
-		auto cmd = std::unique_ptr<I_Command>(new __Command(args...));
-		_m_commands.push_back(std::move(cmd));
+		std::vector<std::string> result { };	
+		auto trim = [](auto &view) {
+			view.remove_prefix(std::min(view.find_first_not_of(" "),
+					    view.size()));
+		};
+
+
+		trim(view);
+		while (view.length() > 0) {
+
+			char end = ' ';
+			if (view.begin()[0] == '"') {
+				view.remove_prefix(1);
+				end = '"';
+			}
+			
+			size_t i = std::min(view.find(end), view.size());	
+
+			std::string_view res { view.begin(), i};
+			result.push_back(std::string(res));
+			
+			if (end == '"') ++i;
+			view.remove_prefix(i);
+			trim(view);
+		}
+
+		return result;
 	}
 
 	void Shell::run(void) noexcept(true)
 	{
-		const auto execute_cmd = [](auto &cmd) {
+		const auto execute_cmd = [this](auto &cmd, const auto &args) {
 			try {
-				cmd->execute({});
+				cmd->execute(_m_env, args);
 			} catch (std::exception &e) {
 				std::cerr << e.what() << std::endl;
 			}
 		};
 
-		while (!_m_should_close) {
+		while (!_m_env->should_close) {
 			std::cout << _m_prompt + " ";
 			std::string name;
 			std::cin >> name;
 
+			char buf[0x100];
+			std::cin.getline(buf, sizeof(buf)-1);
+
+			auto args = parse_args(std::string_view{ buf });
+
+			bool exec = false;
 			for (auto &cmd : _m_commands) {
 				if (!cmd->match_name(name)) continue;
+				exec = true;
+				execute_cmd(cmd, args);
+				break;
+			}
 
-				execute_cmd(cmd);
+			if (!exec) {
+				std::cerr << "\x1b[31;1m[Wrong Command]\x1b[0m"
+					  << std::endl;
 			}
 		}
 	}

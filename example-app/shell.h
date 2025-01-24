@@ -8,12 +8,17 @@
 
 namespace shell {
 
+	struct Env {
+		bool should_close;
+	};
+
 	class Wrong_Arguments_Exception: public std::runtime_error {
 	public:
 		Wrong_Arguments_Exception(const std::string &help_msg):
 			std::runtime_error("[Wrong arguments] see help msg:\n"
 					   + help_msg) { }
 	};
+
 
 	/**
 	 *     I_Command
@@ -28,7 +33,8 @@ namespace shell {
 		 * @param args --- arguments passed to the command.
 		 */
 		virtual void
-		execute(std::vector<std::string> args) noexcept(false) = 0;
+		execute(std::shared_ptr<Env> env,
+			std::vector<std::string> args) noexcept(false) = 0;
 
 		/**
 		 * Match command name with shell input.
@@ -49,12 +55,17 @@ namespace shell {
 	class Shell {
 		std::vector<std::unique_ptr<I_Command>> _m_commands;
 		std::string _m_prompt;
-		bool _m_should_close;
+		std::shared_ptr<Env> _m_env;
 	public:
 		Shell(const std::string &prompt);
 
 		template<typename __Command, typename... __Args>
-		void add_command(__Args... args) noexcept(false);	
+		void add_command(__Args... args) noexcept(false)
+		{
+			auto cmd = std::unique_ptr<I_Command>(
+						new __Command(args...));
+			_m_commands.push_back(std::move(cmd));
+		}
 
 		void run(void) noexcept(true);
 	};	

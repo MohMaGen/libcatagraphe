@@ -40,6 +40,8 @@ namespace core {
 		Commands _m_commands;	
 
 		bool _m_is_running;
+
+		void _m_loop(void) noexcept(true);
 	public:
 		Core_Thread(ctgrph::Record_Level default_lvl);
 		~Core_Thread();
@@ -73,7 +75,12 @@ namespace core {
 			 * Construct and send command to the state thread.
 			 */
 			template<typename __Command, typename... __Args>
-			void send_command(__Args... args);
+			void send_command(__Args... args)
+			{
+				auto cmd = std::unique_ptr<I_Core_Command>(
+						new __Command(args...));
+				_m_commands.push_back(std::move(cmd));
+			}
 
 			/**
 			 * Close `Core_Thread'.
