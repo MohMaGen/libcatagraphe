@@ -53,6 +53,17 @@ namespace shell {
 			}
 		};
 
+		const auto help = [this] () {
+			std::cout << "CATAGRAPHE SHELL:" << std::endl;	
+			std::cout << "\t\x1b[1mcommand\x1b[0m "
+				  << "[\x1b[4;1m...ARGUMENTS\x1b[0m]"
+				  << std::endl;
+			std::cout << "COMMANDS:" << std::endl;
+			for (auto &cmd: _m_commands) {
+				std::cout << cmd->help_msg() << std::endl;
+			}
+		};
+
 		while (!_m_env->should_close) {
 			std::cout << _m_prompt + " ";
 			std::string name;
@@ -62,6 +73,11 @@ namespace shell {
 			std::cin.getline(buf, sizeof(buf)-1);
 
 			auto args = parse_args(std::string_view{ buf });
+
+			if (name == "help") {
+				help();
+				continue;
+			}
 
 			bool exec = false;
 			for (auto &cmd : _m_commands) {

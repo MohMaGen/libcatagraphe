@@ -38,6 +38,8 @@ namespace shell {
 		help_msg(void) const noexcept(true) override
 		{
 			static const char msg[] = 
+				"\x1b[4;1mCLOSE\x1b[0m\n"
+				"\tclose catagraphe app.\n"
 				"USAGE:\n"
 				"\t\x1b[1mclose\x1b[0m\n"
 				"ARGUMENTS:\n"
@@ -73,6 +75,8 @@ namespace shell {
 		help_msg(void) const noexcept(true) override
 		{
 			static const char msg[] = 
+				"\x1b[4;1mCLEAR\x1b[0m\n"
+				"\tclear shell.\n"
 				"USAGE:\n"
 				"\t\x1b[1mclear\x1b[0m\n"
 				"ARGUMENTS:\n"
@@ -123,6 +127,8 @@ namespace shell {
 		help_msg(void) const noexcept(true) override
 		{
 			static const char msg[] = 
+				"\x1b[4;1mCREATE\x1b[0m\n"
+				"\tcreate record.\n"
 				"USAGE:\n"
 				"\t\x1b[1mcreate\x1b[0m "
 				"\x1b[4;1mLEVEL\x1b[0m "
@@ -170,15 +176,17 @@ namespace shell {
 		help_msg(void) const noexcept(true) override
 		{
 			static const char msg[] = 
+				"\x1b[4;1mSAVE\x1b[0m\n"
+				"\tsave current `ctgrph::Core'.\n"
 				"USAGE:\n"
 				"\t\x1b[1msave\x1b[0m "
 				"\x1b[4;1m[DB_PATH]\x1b[0m\n"
 				"ARGUMENTS:\n"
 				"\t\x1b[1mDB_PATH\x1b[0m\tpath to save the "
 				"current state of core.\n"
-				"\t\t\tIf DB_PATH not set then will use origin"
+				"\t\tIf DB_PATH not set then will use origin"
 				"[the one\n"
-				"used to init core] database path.\n";
+				"\t\tused to init core] database path.\n";
 
 			return { msg };
 		}
@@ -252,6 +260,8 @@ namespace shell {
 		help_msg(void) const noexcept(true) override
 		{
 			static const char msg[] = 
+				"\x1b[4;1mDISPLAY\x1b[0m\n"
+				"\tdisplay all records.\n"
 				"USAGE:\n"
 				"\t\x1b[1mdisplay\x1b[0m\n"
 				"ARGUMENTS:\n"

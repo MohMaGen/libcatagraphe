@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 		default_lvl = ctgrph::level_of_string(argv[2]);
 
 	{
-		std::ofstream _(db_path);
+		std::fstream _(db_path, std::ios::in | std::ios::app);
 	}
 
 	std::shared_ptr<core::Core_Thread> thrd (
