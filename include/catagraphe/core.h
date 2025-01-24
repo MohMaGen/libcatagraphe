@@ -5,25 +5,69 @@
 #include <vector>
 #include <span>
 
+#include <catagraphe/exception.h>
 #include <catagraphe/serde.h>
 #include <catagraphe/date.h>
 
+
 namespace ctgrph {
 
+	/**
+	 *     Record Level
+	 * --------------------
+	 * Enumeration describing different levels of records.
+	 * The lesser value of enum the lesser important record level is.
+	 * 
+	 * If level of record is lesser than current default level than
+	 * record would not be saved.
+	 *
+	 * This enum is sized to one byte.
+	 */
 	enum class Record_Level: Byte {
-		Text = 0, Debug, Info, Warning, Error
+		Text = 0, Debug, Info, Warning, Error,
 	};
 
+	Record_Level level_of_string(const std::string &string);	
 
+	/**
+	 *     Recod
+	 * -------------
+	 * Struct represening single record (message) in the journal.
+	 * 
+	 * Records have 3 public fileds: `lvl', `date', and `text'.
+	 * 	- `lvl'   --- level of the current record. Serialized as 
+	 *		   one byte. 
+	 *	- `date'  --- date at this recod was created. Serialized as
+	 *	           8 bytes (unsigned long long). Serialized value equal
+	 *	           to get_time() value.
+	 *	- `text'  --- the message of record. Serialized as array of
+	 *		   characters ened with null character ('\0').
+	 *
+	 * Records inherit interfaces `I_Serializible' and `I_Deserializible'
+	 * from `catagraphe/serde.h', so record can be serialized and
+	 * deserialized.
+	 */
 	class Record: public I_Serializible, public I_Deserializible {
 	public:
-		Record_Level lvl;
-		Date date; 
-		std::string text;
+		Record_Level lvl; 	// level of the record.
+		Date date;		// date at this recod was created .
+		std::string text;	// message of record.
 
 		Record() { }
+
+		/**
+		 * Create record from value of it's fields.
+		 */
 		Record(Record_Level lvl, Date date, const std::string &text):
 			lvl(lvl), date(date), text(text) { }
+
+		/**
+		 * Create record with date value equal current date.
+		 */
+		Record(Record_Level lvl, const std::string &text):
+			lvl(lvl), date(), text(text) { }
+
+		
 
 		virtual Bytes serialize(void) const noexcept(true) override;
 		virtual void
@@ -31,6 +75,10 @@ namespace ctgrph {
 	};
 
 
+	/**
+	 *     Core
+	 * ____________
+	 */
 	class Core {
 	public:
 		using Storage = std::vector<Record>;

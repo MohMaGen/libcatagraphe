@@ -24,7 +24,4 @@ $(objs): $(build-dir)/test_%.o: $(src-dir)/%.cpp $(incs)
 
 run: build
 	@bash -c "echo -e \"\\t• \\x1b[35mrun tests\\x1b[0m\""
-	@LD_LIBRARY_PATH=$(LD_PATH):$(lib-dir) $(build-dir)/run-tests
-
-
-	
+	@LD_LIBRARY_PATH=$(LD_PATH):$(lib-dir) $(build-dir)/run-tests	

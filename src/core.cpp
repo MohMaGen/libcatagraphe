@@ -5,6 +5,26 @@
 #include <cstring>
 
 namespace ctgrph {
+
+	Record_Level level_of_string(const std::string &string) {
+		if (string == "Text")
+			return Record_Level::Text;
+
+		if (string == "Debug")
+			return Record_Level::Debug;
+
+		if (string == "Info")
+			return Record_Level::Info;
+
+		if (string == "Warning")
+			return Record_Level::Warning;
+
+		if (string == "Error")
+			return Record_Level::Error;
+
+		throw Exception("[Level of String] failed to parse level");
+	}
+
 	Bytes Record::serialize(void) const noexcept(true)
 	{
 		Bytes out (0);			
