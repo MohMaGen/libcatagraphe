@@ -171,14 +171,91 @@ namespace shell {
 		{
 			static const char msg[] = 
 				"USAGE:\n"
-				"\t\x1b[1mcreate\x1b[0m "
-				"\x1b[4;1m[DB_PATH]\x1b[0m "
+				"\t\x1b[1msave\x1b[0m "
+				"\x1b[4;1m[DB_PATH]\x1b[0m\n"
 				"ARGUMENTS:\n"
 				"\t\x1b[1mDB_PATH\x1b[0m\tpath to save the "
 				"current state of core.\n"
 				"\t\t\tIf DB_PATH not set then will use origin"
 				"[the one\n"
 				"used to init core] database path.\n";
+
+			return { msg };
+		}
+
+	};
+
+	class Display_Command: public I_Command {	
+		std::shared_ptr<core::Core_Thread> _m_thrd;
+	public:
+		Display_Command(std::shared_ptr<core::Core_Thread> thrd):
+			_m_thrd(thrd) {}
+
+		virtual void
+		execute(std::shared_ptr<Env> env,
+			std::vector<std::string> args) noexcept(false) override
+		{
+			if (args.size() > 0)
+				throw Wrong_Arguments_Exception(help_msg());
+			
+			using View = commands::Const_View_Guard;
+			auto view = std::make_shared<View>();
+
+			{
+				using Command = commands::Get_Records_Command;
+				auto guard = _m_thrd->lock();
+				guard.send_command<Command> (view);
+			}
+
+			while (true) {
+				std::lock_guard guard { view->mutex };
+				if (view->finished) break;
+			}
+
+			for (auto &[lvl, date, text]: view->view) {
+				std::cout << "[\x1b[4;1m"
+					  << date.display("%F %H:%M:%S")
+					  << "\x1b[0m]";
+
+				using Level = ctgrph::Record_Level;
+				switch (lvl) {
+				case Level::Text:
+					std::cout << " < Text > ";
+					break;
+				case Level::Debug:
+					std::cout << " < Debug > \x1b[35m";
+					break;
+				case Level::Info:
+					std::cout << " < Info > \x1b[32m";
+					break;
+				case Level::Warning:
+					std::cout << " < Warning > \x1b[33m";
+					break;
+				case Level::Error:
+					std::cout << " < Error > \x1b[31m";
+					break;
+				}
+
+				std::cout << "`" << text << "'\x1b[0m"
+					  << std::endl;
+			}
+		}
+
+		virtual bool
+		match_name(const std::string &name) const noexcept(true)
+						    override
+		{
+			return name == std::string("display");
+		}
+
+		virtual std::string
+		help_msg(void) const noexcept(true) override
+		{
+			static const char msg[] = 
+				"USAGE:\n"
+				"\t\x1b[1mdisplay\x1b[0m\n"
+				"ARGUMENTS:\n"
+				"\thas not.\n";
 
 			return { msg };
 		}

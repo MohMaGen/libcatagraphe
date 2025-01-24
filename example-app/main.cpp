@@ -1,6 +1,7 @@
 #include <catagraphe/core.h>
 
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include "./shell-commands.h"
 #include "./core-thread.h"
@@ -30,21 +31,14 @@ int main(int argc, char **argv)
 	}
 
 	std::string db_path { argv[1] };
-
+	
 
 	ctgrph::Record_Level default_lvl = ctgrph::Record_Level::Text;
-	if (argc >= 3) {
-		if (std::strcmp(argv[2], "Text") == 0)
-			default_lvl = ctgrph::Record_Level::Text;
+	if (argc >= 3)
+		default_lvl = ctgrph::level_of_string(argv[2]);
 
-		if (std::strcmp(argv[2], "Info") == 0)
-			default_lvl = ctgrph::Record_Level::Text;
-
-		if (std::strcmp(argv[2], "Warning") == 0)
-			default_lvl = ctgrph::Record_Level::Warning;
-
-		if (std::strcmp(argv[2], "Error") == 0)
-			default_lvl = ctgrph::Record_Level::Error;
+	{
+		std::ofstream _(db_path);
 	}
 
 	std::shared_ptr<core::Core_Thread> thrd (
@@ -59,6 +53,7 @@ int main(int argc, char **argv)
 
 	shell.add_command<shell::Create_Record_Command>(thrd);
 	shell.add_command<shell::Save_Command>(thrd, db_path);
+	shell.add_command<shell::Display_Command>(thrd);
 
 	shell.run();	
 

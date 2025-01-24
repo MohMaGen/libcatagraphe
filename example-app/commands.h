@@ -4,6 +4,8 @@
 #include <catagraphe/core.h>
 #include "./core-thread.h"
 
+#include <memory>
+
 namespace commands {
 
 	/**
@@ -51,7 +53,36 @@ namespace commands {
 		{
 			core.save(_m_save_path);
 		}
-	};	
+	};
+
+
+	struct Const_View_Guard {
+		ctgrph::Core::Const_View view;
+
+		std::mutex mutex;
+		bool finished;
+	};
+
+	/**
+	 *     Get_Records_Command
+	 * ---------------------------
+	 *
+	 */
+	class Get_Records_Command: public core::I_Core_Command {
+		std::shared_ptr<Const_View_Guard> _m_view;
+	public:
+		Get_Records_Command(std::shared_ptr<Const_View_Guard> view):
+			_m_view(view) {}
+
+		virtual void
+		execute(ctgrph::Core &core) noexcept(false) override
+		{
+			std::lock_guard guard { _m_view->mutex };
+
+			_m_view->view = core.get_records();
+			_m_view->finished = true;
+		}
+	};
 }
 
 
