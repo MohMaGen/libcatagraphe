@@ -5,8 +5,10 @@
 #include <vector>
 #include <span>
 
+#include <catagraphe/exception.h>
 #include <catagraphe/serde.h>
 #include <catagraphe/date.h>
+
 
 namespace ctgrph {
 
@@ -22,9 +24,10 @@ namespace ctgrph {
 	 * This enum is sized to one byte.
 	 */
 	enum class Record_Level: Byte {
-		Text = 0, Debug, Info, Warning, Error
+		Text = 0, Debug, Info, Warning, Error,
 	};
 
+	Record_Level level_of_string(const std::string &string);	
 
 	/**
 	 *     Recod

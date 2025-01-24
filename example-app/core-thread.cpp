@@ -21,6 +21,7 @@ namespace core {
 					log_err(e.what());
 				};
 			}
+			_m_commands.clear();
 		} while(_m_is_running);
 	}
 

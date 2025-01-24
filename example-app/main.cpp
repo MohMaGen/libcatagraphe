@@ -58,6 +58,7 @@ int main(int argc, char **argv)
 	shell.add_command<shell::Clear_Command>();
 
 	shell.add_command<shell::Create_Record_Command>(thrd);
+	shell.add_command<shell::Save_Command>(thrd, db_path);
 
 	shell.run();	
 

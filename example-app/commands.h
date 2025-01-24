@@ -24,7 +24,11 @@ namespace commands {
 				      std::string text):
 				      _m_lvl(lvl), _m_text(text) {}
 
-		virtual void execute(ctgrph::Core&) noexcept(false) override;
+		virtual void
+		execute(ctgrph::Core &core) noexcept(false) override
+		{
+			core.create_record(_m_lvl, _m_text);
+		}
 	};
 
 	/**
@@ -42,7 +46,11 @@ namespace commands {
 		Save_Command(const std::string save_path):
 			_m_save_path(save_path) {}
 
-		virtual void execute(ctgrph::Core&) noexcept(false) override;
+		virtual void
+		execute(ctgrph::Core &core) noexcept(false) override
+		{
+			core.save(_m_save_path);
+		}
 	};	
 }
 
